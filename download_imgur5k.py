@@ -44,6 +44,13 @@ def parse_args():
         required=False,
         help="Directory path to download the image",
     )
+    parser.add_argument(
+        "--max_workers",
+        type=int,
+        default=64,
+        required=False,
+        help="Maximum number of worker threads for downloading images",
+    )
     args = parser.parse_args()
     return args
 
@@ -127,7 +134,8 @@ def main():
         "Chrome/58.0.3029.110 Safari/537.3"
     }
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=64) as executor:
+    max_workers = args.max_workers
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = [
             executor.submit(
                 download_and_verify_image,
